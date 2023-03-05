@@ -65,7 +65,7 @@ public class PostServiceTest {
         String userName = "userName";
         Integer postId = 1;
 
-        PostEntity postEntity = PostEntityFixture.get(userName, postId);
+        PostEntity postEntity = PostEntityFixture.get(userName, postId, 1);
         UserEntity userEntity = postEntity.getUser();
 
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
@@ -82,7 +82,7 @@ public class PostServiceTest {
         String userName = "userName";
         Integer postId = 1;
 
-        PostEntity postEntity = PostEntityFixture.get(userName, postId);
+        PostEntity postEntity = PostEntityFixture.get(userName, postId, 1);
         UserEntity userEntity = postEntity.getUser();
 
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(userEntity));
@@ -100,12 +100,12 @@ public class PostServiceTest {
         String userName = "userName";
         Integer postId = 1;
 
-        PostEntity postEntity = PostEntityFixture.get(userName, postId);
-        UserEntity userEntity = postEntity.getUser();
-        UserEntity writer = UserEntityFixture.get("user", "pwd");
+        PostEntity postEntity = PostEntityFixture.get(userName, postId, 1);
+        UserEntity writer = UserEntityFixture.get("user", "pwd", 2);
 
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(writer));
         when(postEntityRepository.findById(postId)).thenReturn(Optional.of(postEntity));
+        when(postEntityRepository.saveAndFlush(any())).thenReturn(postEntity);
 
         SnsApplicationException e = Assertions.assertThrows(SnsApplicationException.class, () -> postService.modify(title, body, userName, postId));
         assertEquals(ErrorCode.INVALID_PERMISSION,e.getErrorCode());
