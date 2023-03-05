@@ -4,10 +4,10 @@ import dev.be.sns.model.Entity.UserEntity;
 
 public class UserEntityFixture {
 
-    public static UserEntity get(String username, String password)
+    public static UserEntity get(String username, String password, Integer userID)
     {
         UserEntity result = new UserEntity();
-        result.setId(1);
+        result.setId(userID);
         result.setUserName(username);
         result.setPassword(password);
         return result;

@@ -5,10 +5,10 @@ import dev.be.sns.model.Entity.UserEntity;
 
 public class PostEntityFixture {
 
-    public static PostEntity get(String username, Integer postId)
+    public static PostEntity get(String username, Integer postId, Integer userId)
     {
         UserEntity user = new UserEntity();
-        user.setId(1);
+        user.setId(userId);
         user.setUserName(username);
 
         PostEntity result = new PostEntity();
