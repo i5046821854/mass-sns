@@ -14,7 +14,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token is Invalid"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is not valid"),
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found")
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found"),
+    ALREADY_LIKED(HttpStatus.CONFLICT, "User already like the post")
     ;
 
 
