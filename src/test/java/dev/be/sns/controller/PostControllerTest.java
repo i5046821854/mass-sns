@@ -1,6 +1,7 @@
 package dev.be.sns.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.be.sns.controller.request.PostCommentRequest;
 import dev.be.sns.controller.request.PostCreateRequest;
 import dev.be.sns.controller.request.PostModifyRequest;
 import dev.be.sns.controller.request.UserJoinRequest;
@@ -225,6 +226,32 @@ public class PostControllerTest {
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
+    @Test
+    @WithMockUser
+    void 댓글기능() throws Exception{
+        mockMvc.perform(post("/api/v1/posts/1/comment")
+                        .content(objectMapper.writeValueAsBytes(new PostCommentRequest(("comment"))))
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print()).andExpect(status().isOk());
+    }
 
+    @Test
+    @WithAnonymousUser
+    void 댓글_비로그인() throws Exception{
+        mockMvc.perform(post("/api/v1/posts/1/comment")
+                        .content(objectMapper.writeValueAsBytes(new PostCommentRequest(("comment"))))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void 댓글작성시_해당게시물_존재안할_시() throws Exception{
+        doThrow(new SnsApplicationException(ErrorCode.POST_NOT_FOUND)).when(postService).comment(any(), any(), any());
+        mockMvc.perform(post("/api/v1/posts/1/comment")
+                        .content(objectMapper.writeValueAsBytes(new PostCommentRequest(("comment"))))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print()).andExpect(status().isOk());
+    }
 
 }
