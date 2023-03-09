@@ -1,5 +1,7 @@
 package dev.be.sns.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.be.sns.model.Entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails {
     private Integer id;
     private UserRole userRole;
@@ -38,31 +41,37 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.getUserRole().toString()));
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return this.username;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return this.deletedAt==null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return this.deletedAt==null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return this.deletedAt==null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return this.deletedAt==null;
     }
