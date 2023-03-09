@@ -2,16 +2,12 @@ package dev.be.sns.service;
 
 import dev.be.sns.exception.ErrorCode;
 import dev.be.sns.exception.SnsApplicationException;
+import dev.be.sns.model.AlarmArgs;
+import dev.be.sns.model.AlarmType;
 import dev.be.sns.model.Comment;
-import dev.be.sns.model.Entity.CommentEntity;
-import dev.be.sns.model.Entity.LikeEntity;
-import dev.be.sns.model.Entity.PostEntity;
-import dev.be.sns.model.Entity.UserEntity;
+import dev.be.sns.model.Entity.*;
 import dev.be.sns.model.Post;
-import dev.be.sns.repository.CommentEntityRepository;
-import dev.be.sns.repository.LikeEntityRepository;
-import dev.be.sns.repository.PostEntityRepository;
-import dev.be.sns.repository.UserEntityRepository;
+import dev.be.sns.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +22,8 @@ public class PostService {
     private final UserEntityRepository userEntityRepository;
     private final LikeEntityRepository likeEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
+
     @Transactional
     public void create(String title, String body, String userName) {
 
@@ -106,6 +104,7 @@ public class PostService {
         PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
                 new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
         commentEntityRepository.save(CommentEntity.of(userEntity, postEntity, comment));
+        alarmEntityRepository.save(AlarmEntity.of(AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userEntity.getId(), postId), postEntity.getUser()));
     }
 
     public Page<Comment> commentList(Integer postId, Pageable pageable) {
