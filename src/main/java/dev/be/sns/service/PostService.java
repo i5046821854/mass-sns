@@ -91,7 +91,7 @@ public class PostService {
         alarmEntityRepository.save(AlarmEntity.of(AlarmType.NEW_LIKE_ON_POST, new AlarmArgs(userEntity.getId(), postId), postEntity.getUser()));
     }
 
-    public int likeCount(Integer postId){
+    public long likeCount(Integer postId){
         PostEntity postEntity = postEntityRepository.findById(postId).orElseThrow(() ->
                 new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", postId)));
 
