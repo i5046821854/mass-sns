@@ -2,8 +2,10 @@ package dev.be.sns.service;
 
 import dev.be.sns.exception.ErrorCode;
 import dev.be.sns.exception.SnsApplicationException;
+import dev.be.sns.model.Alarm;
 import dev.be.sns.model.Entity.UserEntity;
 import dev.be.sns.model.User;
+import dev.be.sns.repository.AlarmEntityRepository;
 import dev.be.sns.repository.UserEntityRepository;
 import dev.be.sns.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class UserService {
 
     private final BCryptPasswordEncoder encoder;
     private final UserEntityRepository userEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
+
     @Value("${jwt.secret-key}")
     private String secretKey;
     @Value("${jwt.token.expired-time-ms}")
@@ -61,7 +65,11 @@ public class UserService {
         return "";
     }
 
-    public Page<Void> alarmList(String userName, Pageable pageable) {
-        return Page.empty();
+    @Transactional
+    public Page<Alarm> alarmList(String userName, Pageable pageable) {
+        UserEntity user = userEntityRepository.findByUserName(userName).orElseThrow(
+                () -> new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("userName is %s", userName))
+        );
+        return alarmEntityRepository.findAllByUser(user, pageable).map(Alarm::fromEntity);
     }
 }
