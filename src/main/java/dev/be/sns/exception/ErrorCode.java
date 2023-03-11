@@ -15,7 +15,8 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token is Invalid"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is not valid"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not found"),
-    ALREADY_LIKED(HttpStatus.CONFLICT, "User already like the post")
+    ALREADY_LIKED(HttpStatus.CONFLICT, "User already like the post"),
+    NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
     ;
 
 
